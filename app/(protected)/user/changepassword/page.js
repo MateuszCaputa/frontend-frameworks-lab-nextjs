@@ -4,21 +4,15 @@ import { updatePassword } from "firebase/auth";
 import { useAuth } from "@/app/lib/AuthContext";
 
 /**
- * (Lab 7, Task 1 - Protected Routes)
- * Page component for changing the user's password.
- * Requires authentication (protected route).
- * Uses Firebase 'updatePassword' method.
+ * (Lab 7, Task 1)
+ * Protected page for changing password.
+ * Uses Firebase updatePassword functionality.
  */
 export default function ChangePasswordPage() {
   const { user } = useAuth();
   const [message, setMessage] = useState({ type: "", text: "" });
   const [loading, setLoading] = useState(false);
 
-  /**
-   * Handles password change form submission.
-   * Validates that passwords match and updates them in Firebase.
-   * @param {Event} e - Form submission event.
-   */
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -46,7 +40,7 @@ export default function ChangePasswordPage() {
       if (error.code === "auth/requires-recent-login") {
         setMessage({
           type: "error",
-          text: "Dla bezpieczeństwa musisz się wylogować i zalogować ponownie, aby zmienić hasło.",
+          text: "Dla bezpieczeństwa musisz się wylogować i zalogować ponownie.",
         });
       } else {
         setMessage({ type: "error", text: `Błąd: ${error.message}` });

@@ -1,21 +1,26 @@
 "use client";
+
 import { useState } from "react";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+} from "firebase/auth";
 import { auth } from "@/app/lib/firebase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 /**
- * (Lab 7, Task 3)
- * User Registration Page.
- * Creates a new Firebase user account and updates the user profile with display name.
+ * (Lab 7, Task 3) & (Lab 8, Task 2)
+ * Registration Page.
+ * Creates account, updates profile, sends verification email, and redirects.
  */
 export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -37,28 +42,40 @@ export default function RegisterPage() {
       return;
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        updateProfile(userCredential.user, { displayName: name })
-          .then(() => router.push("/user/profile"))
-          .catch(() => router.push("/user/profile"));
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case "auth/email-already-in-use":
-            setError("Ten adres email jest już zajęty.");
-            break;
-          case "auth/weak-password":
-            setError("Hasło jest za słabe (min. 6 znaków).");
-            break;
-          case "auth/invalid-email":
-            setError("Nieprawidłowy format adresu email.");
-            break;
-          default:
-            setError(`Błąd rejestracji: ${error.message}`);
-        }
-        setLoading(false);
-      });
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      await updateProfile(user, { displayName: name });
+
+      // (Lab 8, Task 2) Send verification email
+      await sendEmailVerification(user);
+
+      router.push(`/user/verify?email=${encodeURIComponent(email)}`);
+    } catch (error) {
+      console.error("Registration error:", error.code);
+
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setError(
+            "Ten adres email jest już zarejestrowany. Spróbuj się zalogować."
+          );
+          break;
+        case "auth/weak-password":
+          setError("Hasło jest za słabe (min. 6 znaków).");
+          break;
+        case "auth/invalid-email":
+          setError("Nieprawidłowy format adresu email.");
+          break;
+        default:
+          setError(`Błąd rejestracji: ${error.message}`);
+      }
+      setLoading(false);
+    }
   };
 
   return (

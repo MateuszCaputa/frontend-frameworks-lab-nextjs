@@ -5,9 +5,10 @@ import { auth } from "@/app/lib/firebase";
 import { useRouter } from "next/navigation";
 
 /**
- * (Lab 7, Task 1 - Protected Routes)
- * Page component that handles user sign out.
- * Automatically logs the user out via Firebase upon mounting and redirects to the sign-in page.
+ * (Lab 8, Task 1)
+ * Sign Out Logic Page.
+ * Logs out the user automatically via useEffect and redirects.
+ * Serves as the logout action for the sidebar link.
  */
 export default function SignOutPage() {
   const router = useRouter();

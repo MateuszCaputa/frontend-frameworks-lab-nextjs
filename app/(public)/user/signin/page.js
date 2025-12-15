@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import {
   signInWithEmailAndPassword,
@@ -10,11 +11,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 /**
- * (Lab 7, Task 3, 7, 8)
+ * (Lab 7, Task 3, 7, 8) & (Lab 8, Task 6)
  * Sign In Page.
- * Handles user authentication via Firebase Email/Password.
- * Redirects to the previous page (returnUrl) upon success (Task 8).
- * Displays errors in the UI instead of just console (Task 8).
+ * Handles user authentication and enforces email verification.
+ * Redirects to the returnUrl upon successful login.
  */
 export default function SignInPage() {
   const router = useRouter();
@@ -36,7 +36,15 @@ export default function SignInPage() {
       .then(() => {
         return signInWithEmailAndPassword(auth, email, password);
       })
-      .then(() => {
+      .then((userCredential) => {
+        const user = userCredential.user;
+
+        // (Lab 8, Task 6) Enforce email verification
+        if (!user.emailVerified) {
+          router.push(`/user/verify?email=${encodeURIComponent(user.email)}`);
+          return;
+        }
+
         router.push(returnUrl);
       })
       .catch((error) => {

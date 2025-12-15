@@ -14,13 +14,17 @@ function ProtectedLayout({ children }) {
   const returnUrl = usePathname();
 
   useLayoutEffect(() => {
-    if (!loading && !user) {
-      redirect(`/user/signin?returnUrl=${returnUrl}`);
+    if (!loading) {
+      if (!user) {
+        redirect(`/user/signin?returnUrl=${returnUrl}`);
+      } else if (!user.emailVerified) {
+        redirect(`/user/verify?email=${encodeURIComponent(user.email)}`);
+      }
     }
   }, [user, loading, returnUrl]);
 
-  // Do not render children until user is confirmed
-  if (loading || !user) {
+  // Nie renderuj treści chronionej, dopóki nie mamy pewności, że user jest zweryfikowany
+  if (loading || !user || !user.emailVerified) {
     return null;
   }
 
