@@ -1,0 +1,156 @@
+@startuml
+
+skinparam componentStyle uml2
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+
+title Architektura Projektu Next.js (Lab 7-11)
+
+' --- WARSTWA DANYCH I KONFIGURACJI ---
+package "app/lib (Infrastructure)" {
+  class "firebase.js" as Firebase {
+    + auth: Auth
+    + db: Firestore
+    --
+    Uses Environment Variables
+  }
+
+  class "AuthContext.js" as AuthContext <<Provider>> {
+    + user: User | null
+    + loading: boolean
+    --
+    + AuthProvider({children})
+    + useAuth(): Hook
+  }
+}
+
+package "app/data" {
+  object "mockData.js" as MockData {
+    + WEEK_DAYS
+    + TIME_SLOTS
+  }
+}
+
+' --- WARSTWA KOMPONENTÓW UI ---
+package "app/components (UI)" {
+  class Sidebar <<Client Component>> {
+    --
+    Renders menu based on Auth state
+  }
+
+  class Topbar <<Client Component>> {
+    --
+    Renders Avatar/Login buttons
+  }
+
+  package "schedule" {
+    class EventModal <<Client Component>> {
+      - formData: State
+      --
+      + onSave()
+      + onDelete()
+      + validateCollision()
+    }
+  }
+}
+
+' --- WARSTWA STRON (APP ROUTER) ---
+package "app (Routes)" {
+  
+  class RootLayout <<Server Component>> {
+    --
+    Wraps app with AuthProvider
+  }
+  
+  class "page.js" as HomePage <<Client Component>> {
+    --
+    Landing Page
+  }
+
+  class "not-found.js" as NotFound
+
+  package "(public)" {
+    class "user/signin/page.js" as SignInPage {
+      + onSubmit(email, password)
+    }
+    class "user/register/page.js" as RegisterPage {
+      + onSubmit(email, password, name)
+    }
+    class "user/verify/page.js" as VerifyPage {
+      + handleResend()
+    }
+  }
+
+  package "(protected)" {
+    class ProtectedLayout <<Client Component>> {
+      --
+      Checks user & emailVerified
+      Redirects if unauthorized
+    }
+
+    class "user/profile/page.js" as ProfilePage {
+      - displayName, photoURL, address
+      --
+      + updateProfile()
+      + setDoc(firestore)
+    }
+
+    class "user/changepassword/page.js" as ChangePasswordPage {
+      + updatePassword()
+    }
+
+    class "user/signout/page.js" as SignOutPage {
+      + signOut()
+    }
+
+    class "schedule/page.js" as SchedulePage {
+      - events: State
+      --
+      + fetchEvents(firestore)
+      + handleSave()
+      + handleDelete()
+      + checkCollision()
+    }
+  }
+}
+
+' --- RELACJE ---
+
+' Konfiguracja i Context
+AuthContext ..> Firebase : uses auth observer
+RootLayout *-- AuthContext : provides
+RootLayout *-- Sidebar
+RootLayout *-- Topbar
+RootLayout --> HomePage : renders
+
+' Dostęp do Auth w komponentach
+Sidebar ..> AuthContext : useAuth()
+Topbar ..> AuthContext : useAuth()
+HomePage ..> AuthContext : useAuth()
+
+' Trasy Publiczne
+SignInPage ..> Firebase : signInWithEmail...
+RegisterPage ..> Firebase : createUser...
+VerifyPage ..> Firebase : sendEmailVerification...
+
+' Trasy Chronione
+ProtectedLayout ..> AuthContext : guards routes
+ProtectedLayout --> ProfilePage : renders
+ProtectedLayout --> SchedulePage : renders
+ProtectedLayout --> ChangePasswordPage : renders
+ProtectedLayout --> SignOutPage : renders
+
+' Logika Biznesowa Stron
+ProfilePage ..> Firebase : updateProfile / setDoc
+SignOutPage ..> Firebase : signOut
+ChangePasswordPage ..> Firebase : updatePassword
+
+' Moduł Schedule (Planer)
+SchedulePage ..> Firebase : query / addDoc / updateDoc
+SchedulePage ..> MockData : uses grid structure
+SchedulePage *-- EventModal : manages
+EventModal ..> MockData : uses time slots
+
+@enduml
