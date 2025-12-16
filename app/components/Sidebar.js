@@ -7,6 +7,7 @@ import {
   FaCalendarAlt,
   FaKey,
   FaSignInAlt,
+  FaTimes,
 } from "react-icons/fa";
 import { useAuth } from "@/app/lib/AuthContext";
 
@@ -14,18 +15,31 @@ import { useAuth } from "@/app/lib/AuthContext";
  * Sidebar Navigation Component.
  * Renders the side navigation menu with conditional links based on the user's auth state.
  */
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { user } = useAuth();
 
   return (
-    <aside className="w-64 bg-white shadow-md hidden md:flex flex-col z-10">
-      <div className="h-16 flex items-center justify-center border-b border-gray-200">
+    <aside
+      className={`
+        fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out
+        md:translate-x-0 md:static md:inset-auto md:shadow-md
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
+    >
+      <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
         <h1 className="text-xl font-bold text-indigo-600 uppercase tracking-wider">
           LabApp
         </h1>
+        {/* Mobile Close Button */}
+        <button
+          onClick={onClose}
+          className="md:hidden text-gray-500 hover:text-gray-700"
+        >
+          <FaTimes size={20} />
+        </button>
       </div>
 
-      <nav className="flex-1 px-4 py-6 space-y-2">
+      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         <p className="px-4 text-xs font-semibold text-gray-400 uppercase">
           Menu
         </p>
@@ -83,7 +97,7 @@ export default function Sidebar() {
 
       <div className="p-4 border-t border-gray-200">
         <div className="text-xs text-center text-gray-400">
-          &copy; 2025 Student 15300
+          &copy; 2026 Mateusz Caputa 15300
         </div>
       </div>
     </aside>

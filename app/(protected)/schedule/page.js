@@ -161,7 +161,7 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 flex flex-col h-[calc(100vh-140px)] md:h-auto">
       {isModalOpen && (
         <EventModal
           isOpen={isModalOpen}
@@ -172,7 +172,8 @@ export default function SchedulePage() {
         />
       )}
 
-      <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+      {/* Header */}
+      <div className="px-4 py-4 sm:px-6 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-xl font-bold text-gray-800">Twój Plan Zajęć</h2>
           <p className="mt-1 text-sm text-gray-500">
@@ -181,17 +182,17 @@ export default function SchedulePage() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <div className="min-w-[800px]">
-          {/* Header Row */}
-          <div className="grid grid-cols-8 border-b border-gray-200 bg-gray-100">
-            <div className="p-4 text-center font-bold text-gray-600 border-r border-gray-200">
+      <div className="overflow-auto flex-1 relative">
+        <div className="min-w-[800px] h-full">
+          {/* Schedule Grid Header */}
+          <div className="grid grid-cols-8 border-b border-gray-200 bg-gray-100 sticky top-0 z-10 shadow-sm">
+            <div className="p-2 sm:p-4 text-center font-bold text-gray-600 border-r border-gray-200 bg-gray-100">
               Godzina
             </div>
             {WEEK_DAYS.map((day) => (
               <div
                 key={day}
-                className="p-4 text-center font-bold text-gray-700 border-r border-gray-200 last:border-r-0"
+                className="p-2 sm:p-4 text-center font-bold text-gray-700 border-r border-gray-200 last:border-r-0 bg-gray-100"
               >
                 {day}
               </div>
@@ -204,7 +205,7 @@ export default function SchedulePage() {
               key={hour}
               className="grid grid-cols-8 border-b border-gray-100 h-24"
             >
-              <div className="p-2 text-center text-sm font-medium text-gray-500 border-r border-gray-200 bg-gray-50 flex items-center justify-center">
+              <div className="p-1 sm:p-2 text-center text-xs sm:text-sm font-medium text-gray-500 border-r border-gray-200 bg-gray-50 flex items-center justify-center sticky left-0">
                 {hour}:00
               </div>
 
@@ -222,7 +223,7 @@ export default function SchedulePage() {
                 return (
                   <div
                     key={`${day}-${hour}`}
-                    className="relative border-r border-gray-100 last:border-r-0 p-1"
+                    className="relative border-r border-gray-100 last:border-r-0 p-0.5 sm:p-1"
                     style={{ overflow: "visible" }}
                   >
                     {!isFullyOccupied && (
@@ -230,17 +231,17 @@ export default function SchedulePage() {
                         onClick={() =>
                           handleSlotClick(day, hour, isTopOccupied)
                         }
-                        className={`absolute left-0 right-0 z-0 transition-colors cursor-pointer group hover:bg-indigo-50 flex items-center justify-center
-                          ${
-                            isTopOccupied
-                              ? "bottom-0 top-1/2"
-                              : isBottomOccupied
-                              ? "top-0 bottom-1/2"
-                              : "inset-0"
-                          }
-                        `}
+                        className={`absolute left-0 right-0 z-0 transition-colors cursor-pointer active:bg-indigo-100 md:hover:bg-indigo-50 flex items-center justify-center
+                        ${
+                          isTopOccupied
+                            ? "bottom-0 top-1/2"
+                            : isBottomOccupied
+                            ? "top-0 bottom-1/2"
+                            : "inset-0"
+                        }
+                      `}
                       >
-                        <span className="hidden group-hover:block text-indigo-200 text-3xl font-light">
+                        <span className="text-indigo-200 text-2xl font-light opacity-0 md:group-hover:opacity-100 pointer-events-none">
                           +
                         </span>
                       </div>
@@ -266,19 +267,19 @@ export default function SchedulePage() {
                             zIndex: 10,
                           }}
                           className={`
-                            absolute left-1 right-1
-                            p-2 rounded border shadow-sm text-xs cursor-pointer hover:shadow-md transition-all flex flex-col justify-start overflow-hidden
-                            ${
-                              e.type === "lecture"
-                                ? "bg-blue-100 border-blue-200 text-blue-800 hover:bg-blue-200 hover:-translate-y-0.5"
-                                : e.type === "lab"
-                                ? "bg-green-100 border-green-200 text-green-800 hover:bg-green-200 hover:-translate-y-0.5"
-                                : "bg-yellow-100 border-yellow-200 text-yellow-800 hover:bg-yellow-200 hover:-translate-y-0.5"
-                            }
-                          `}
+                          absolute left-0.5 right-0.5 sm:left-1 sm:right-1
+                          p-1 sm:p-2 rounded border shadow-sm text-[10px] sm:text-xs cursor-pointer hover:shadow-md transition-all flex flex-col justify-start overflow-hidden
+                          ${
+                            e.type === "lecture"
+                              ? "bg-blue-100 border-blue-200 text-blue-800"
+                              : e.type === "lab"
+                              ? "bg-green-100 border-green-200 text-green-800"
+                              : "bg-yellow-100 border-yellow-200 text-yellow-800"
+                          }
+                        `}
                         >
                           <strong className="block truncate">{e.title}</strong>
-                          <span className="block truncate opacity-75">
+                          <span className="block truncate opacity-75 hidden sm:block">
                             {Math.floor(e.hour)}:{startMinDisplay} -{" "}
                             {endHourDisplay}:{endMinDisplay}
                           </span>

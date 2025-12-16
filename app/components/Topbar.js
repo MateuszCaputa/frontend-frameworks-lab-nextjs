@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { FaSignInAlt, FaUserCircle } from "react-icons/fa";
+import { FaSignInAlt, FaUserCircle, FaBars } from "react-icons/fa"; // Dodano FaBars
 import { useAuth } from "@/app/lib/AuthContext";
 
 /**
@@ -9,12 +9,23 @@ import { useAuth } from "@/app/lib/AuthContext";
  * Renders the top header bar with responsive controls.
  * Displays user avatar/info if logged in, or Login/Register buttons otherwise.
  */
-export default function Topbar() {
+export default function Topbar({ onMenuToggle }) {
   const { user } = useAuth();
 
   return (
-    <header className="h-16 bg-white shadow-sm flex items-center justify-between px-6 lg:px-8 z-0">
-      <div className="text-lg font-medium text-gray-700">Panel Aplikacji</div>
+    <header className="h-16 bg-white shadow-sm flex items-center justify-between px-4 lg:px-8 sticky top-0 z-20">
+      <div className="flex items-center gap-4">
+        {/* Hamburger Menu */}
+        <button
+          onClick={onMenuToggle}
+          className="md:hidden text-gray-500 hover:text-indigo-600 focus:outline-none"
+          aria-label="Otwórz menu"
+        >
+          <FaBars size={24} />
+        </button>
+
+        <div className="text-lg font-medium text-gray-700">Panel Aplikacji</div>
+      </div>
 
       <div className="flex items-center gap-4">
         {user ? (
@@ -47,11 +58,12 @@ export default function Topbar() {
               href="/user/signin"
               className="text-sm font-medium text-gray-500 hover:text-indigo-600 flex items-center gap-2 transition-colors"
             >
-              <FaSignInAlt /> Logowanie
+              <FaSignInAlt />{" "}
+              <span className="hidden sm:inline">Logowanie</span>
             </Link>
             <Link
               href="/user/register"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2 px-4 rounded shadow transition-colors"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2 px-3 sm:px-4 rounded shadow transition-colors"
             >
               Rejestracja
             </Link>
