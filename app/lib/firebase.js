@@ -3,9 +3,8 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 /**
- * (Lab 7, Task 5 & 9)
  * Firebase configuration object.
- * Values are loaded from environment variables for security.
+ * Credentials are loaded from environment variables to ensure security.
  */
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -17,12 +16,11 @@ const firebaseConfig = {
 };
 
 /**
- * (Lab 7, Task 5) & (Lab 9, Prep)
- * Initialize Firebase application using Singleton pattern.
- * Exports 'auth' for authentication and 'db' for Firestore database.
+ * Initialize Firebase application instance.
+ * Uses the Singleton pattern to prevent re-initialization errors during hot-reload.
  */
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
-const db = getFirestore(app); // (Lab 9) Initialize Firestore
+const db = getFirestore(app);
 
 export { app, auth, db };

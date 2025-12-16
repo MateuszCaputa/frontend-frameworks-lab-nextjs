@@ -8,8 +8,8 @@ import { useAuth } from "@/app/lib/AuthContext";
 
 /**
  * (Lab 8, Task 4)
- * Internal component containing Verification Logic.
- * * Allows users to resend the verification email and provides a manual logout.
+ * Verification Page Content.
+ * Allows users to resend verification emails and logout manually.
  */
 function VerifyEmailContent() {
   const router = useRouter();
@@ -135,7 +135,7 @@ function VerifyEmailContent() {
 /**
  * (Lab 11)
  * Main Verification Page.
- * Wraps content in Suspense to allow build with search params.
+ * Wraps content in Suspense boundary for safe search params handling.
  */
 export default function VerifyEmailPage() {
   return (

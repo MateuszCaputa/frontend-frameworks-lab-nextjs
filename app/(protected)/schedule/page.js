@@ -16,21 +16,23 @@ import { WEEK_DAYS, TIME_SLOTS } from "@/app/data/mockData";
 import EventModal from "@/app/components/schedule/EventModal";
 
 /**
- * (Lab 6 Topic 2) & (Lab 9, Task 5)
- * Protected Schedule Page with CRUD functionality.
- * Allows creating, reading, updating, and deleting weekly schedule events.
+ * (Lab 6, Topic 2) & (Lab 9, Task 5)
+ * Protected Schedule Page.
+ * Renders the weekly schedule grid and handles CRUD operations for events via Firestore.
+ * Features collision detection and variable duration rendering.
  */
 export default function SchedulePage() {
   const { user } = useAuth();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState(null); // { day, hour } for create
-  const [selectedEvent, setSelectedEvent] = useState(null); // { id, ...data } for edit
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // --- 1. READ (Pobieranie danych) ---
+  /**
+   * Fetches events for the current user from Firestore.
+   */
   const fetchEvents = async () => {
     if (!user) return;
     try {
@@ -55,6 +57,9 @@ export default function SchedulePage() {
     fetchEvents();
   }, [user]);
 
+  /**
+   * Checks collision for top (first 30min) and bottom (last 30min) of an hour slot.
+   */
   const getSlotStatus = (day, hour) => {
     const isTopOccupied = hasCollision(day, hour, 0.5);
     const isBottomOccupied = hasCollision(day, hour + 0.5, 0.5);
@@ -63,6 +68,7 @@ export default function SchedulePage() {
   };
 
   const handleSlotClick = (day, hour, isTopOccupied) => {
+    // If top is occupied, suggest starting at the half-hour mark
     const startHour = isTopOccupied ? hour + 0.5 : hour;
 
     setSelectedSlot({ day, hour: startHour });
@@ -77,6 +83,9 @@ export default function SchedulePage() {
     setIsModalOpen(true);
   };
 
+  /**
+   * Validates if a proposed event overlaps with existing ones.
+   */
   const hasCollision = (day, startHour, duration, currentEventId = null) => {
     const endHour = startHour + duration;
 
@@ -174,6 +183,7 @@ export default function SchedulePage() {
 
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
+          {/* Header Row */}
           <div className="grid grid-cols-8 border-b border-gray-200 bg-gray-100">
             <div className="p-4 text-center font-bold text-gray-600 border-r border-gray-200">
               Godzina
@@ -188,6 +198,7 @@ export default function SchedulePage() {
             ))}
           </div>
 
+          {/* Time Slots */}
           {TIME_SLOTS.map((hour) => (
             <div
               key={hour}
@@ -238,8 +249,8 @@ export default function SchedulePage() {
                     {slotEvents.map((e) => {
                       const duration = e.duration || 1;
                       const eventStartOffset = (e.hour % 1) * 100;
-
                       const endTime = e.hour + duration;
+
                       const endHourDisplay = Math.floor(endTime);
                       const endMinDisplay = endTime % 1 === 0 ? "00" : "30";
                       const startMinDisplay = e.hour % 1 === 0 ? "00" : "30";

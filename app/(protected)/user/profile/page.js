@@ -8,11 +8,10 @@ import { useAuth } from "@/app/lib/AuthContext";
 import Image from "next/image";
 
 /**
- * (Lab 7, 8, 9)
+ * (Lab 7, Task 1), (Lab 8, Task 3 & 5) & (Lab 9, Task 1 & 4)
  * Protected Profile Page.
- *  * Protected Profile Page with Edit Form.
- * Handles Auth profile updates (displayName, photoURL) and Firestore data (address).
- * Implements "Loading" state to block inputs while fetching data (Lab 9, Task 4).
+ * Allows users to edit their profile information (Auth) and address (Firestore).
+ * Implements input blocking during data fetch for better UX.
  */
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -30,7 +29,6 @@ export default function ProfilePage() {
   const [city, setCity] = useState("");
   const [zipCode, setZipCode] = useState("");
 
-  // (Lab 9, Task 4) Fetch address data
   useEffect(() => {
     if (!user?.uid) return;
 
@@ -73,7 +71,7 @@ export default function ProfilePage() {
         photoURL: photoURL,
       });
 
-      // 2. Firestore Document Update (Lab 9 Task 1)
+      // 2. Firestore Document Update
       await setDoc(
         doc(db, "users", user.uid),
         {
@@ -90,6 +88,7 @@ export default function ProfilePage() {
         type: "success",
         text: "Profil i adres zostały zaktualizowane.",
       });
+      // Reload to update Topbar avatar/name
       window.location.reload();
     } catch (error) {
       setMessage({ type: "error", text: `Błąd: ${error.message}` });
@@ -139,7 +138,7 @@ export default function ProfilePage() {
           )}
 
           <form onSubmit={onSubmit} className="space-y-6" key={user.uid}>
-            {/* Sekcja: Dane Logowania */}
+            {/* Login Data Section */}
             <div className="space-y-4">
               <h4 className="text-md font-semibold text-gray-700 border-b pb-2">
                 Dane Podstawowe
@@ -166,7 +165,7 @@ export default function ProfilePage() {
                     type="text"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    disabled={isSaving} // Blokada przy zapisie
+                    disabled={isSaving}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
                   />
                 </div>
@@ -186,7 +185,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Sekcja: Adres (Firestore) */}
+            {/* Address Section */}
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b pb-2">
                 <h4 className="text-md font-semibold text-gray-700">
@@ -208,7 +207,6 @@ export default function ProfilePage() {
                     type="text"
                     value={street}
                     onChange={(e) => setStreet(e.target.value)}
-                    // (Lab 9 Task 4) Blokada pól przed pobraniem danych
                     disabled={isFetching || isSaving}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400"
                     placeholder={

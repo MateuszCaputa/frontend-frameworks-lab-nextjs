@@ -4,10 +4,10 @@ import { useLayoutEffect } from "react";
 import { redirect, usePathname } from "next/navigation";
 
 /**
- * (Lab 7, Task 6)
  * Protected Route Layout.
- * Guards child routes by checking authentication state.
- * Redirects unauthenticated users to sign-in with a return URL.
+ * Higher-order component that guards child routes.
+ * Checks authentication status and email verification.
+ * Redirects unauthorized users to the sign-in page or verification page.
  */
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
@@ -23,7 +23,6 @@ function ProtectedLayout({ children }) {
     }
   }, [user, loading, returnUrl]);
 
-  // Nie renderuj treści chronionej, dopóki nie mamy pewności, że user jest zweryfikowany
   if (loading || !user || !user.emailVerified) {
     return null;
   }

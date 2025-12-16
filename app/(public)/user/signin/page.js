@@ -12,9 +12,8 @@ import Link from "next/link";
 
 /**
  * (Lab 7, Task 3, 7, 8) & (Lab 8, Task 6)
- * Sign In Page.
- * Handles user authentication and enforces email verification.
- * Redirects to the returnUrl upon successful login.
+ * Sign In Page Content.
+ * Handles user authentication, email verification checks, and redirection.
  */
 function SignInContent() {
   const router = useRouter();
@@ -161,8 +160,8 @@ function SignInContent() {
 
 /**
  * (Lab 11)
- * Main Sign In Page Component.
- * Wraps the content in Suspense to satisfy Next.js build requirements.
+ * Main Sign In Page.
+ * Wraps content in Suspense boundary for safe search params handling.
  */
 export default function SignInPage() {
   return (

@@ -11,8 +11,8 @@ import {
 import { useAuth } from "@/app/lib/AuthContext";
 
 /**
- * Client Component for Sidebar Navigation.
- * Conditionally renders menu items based on authentication state.
+ * Sidebar Navigation Component.
+ * Renders the side navigation menu with conditional links based on the user's auth state.
  */
 export default function Sidebar() {
   const { user } = useAuth();

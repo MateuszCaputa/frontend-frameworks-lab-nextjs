@@ -6,7 +6,7 @@ import { useAuth } from "@/app/lib/AuthContext";
 /**
  * (Lab 7, Task 1)
  * Protected page for changing password.
- * Uses Firebase updatePassword functionality.
+ * Uses Firebase updatePassword functionality with re-authentication check.
  */
 export default function ChangePasswordPage() {
   const { user } = useAuth();

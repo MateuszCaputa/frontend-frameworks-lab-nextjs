@@ -1,9 +1,8 @@
 import Link from "next/link";
 
 /**
- * (Lab 7, Task 4)
- * Global 404 Page.
- * Displays a user-friendly error message for undefined routes.
+ * Global 404 Not Found Page.
+ * Displays a user-friendly error message when a route does not exist.
  */
 export default function NotFound() {
   return (

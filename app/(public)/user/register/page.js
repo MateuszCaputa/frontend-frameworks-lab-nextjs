@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -13,7 +12,7 @@ import Link from "next/link";
 /**
  * (Lab 7, Task 3) & (Lab 8, Task 2)
  * Registration Page.
- * Creates account, updates profile, sends verification email, and redirects.
+ * Handles user creation, profile update, email verification sending, and error handling.
  */
 export default function RegisterPage() {
   const router = useRouter();

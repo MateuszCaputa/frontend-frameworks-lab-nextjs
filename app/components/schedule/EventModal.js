@@ -3,9 +3,9 @@ import { useState } from "react";
 
 /**
  * (Lab 6, Topic 2)
- * Modal Component for Creating and Editing Schedule Events.
- * Handles form state, validation, and triggers onSave/onDelete callbacks.
- * FIX: Shows correct start time for half-hour slots and displays warning.
+ * Event Modal Component.
+ * Handles creation and editing of schedule events.
+ * Features form state management, validation error display, and time calculations.
  */
 export default function EventModal({
   isOpen,
@@ -83,7 +83,7 @@ export default function EventModal({
             </span>
           </div>
 
-          {/* Żółty Warning o nietypowej godzinie startu */}
+          {/* Warning for half-hour start */}
           {isHalfHourStart && (
             <div className="text-xs text-amber-700 bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r">
               <strong>Uwaga:</strong> Zajęcia zaczynają się o{" "}

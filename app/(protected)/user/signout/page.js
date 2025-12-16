@@ -6,9 +6,8 @@ import { useRouter } from "next/navigation";
 
 /**
  * (Lab 8, Task 1)
- * Sign Out Logic Page.
- * Logs out the user automatically via useEffect and redirects.
- * Serves as the logout action for the sidebar link.
+ * Sign Out Page.
+ * Automatically handles user logout via useEffect and redirects to sign-in page.
  */
 export default function SignOutPage() {
   const router = useRouter();

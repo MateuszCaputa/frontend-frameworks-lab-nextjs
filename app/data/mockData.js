@@ -1,7 +1,6 @@
 /**
- * (Lab 6 & 9)
- * Static data for the weekly schedule grid structure.
- * Defines days of the week and time slots (8:00 - 20:00).
+ * Static data for the Weekly Schedule component.
+ * Defines the structure of the grid (Days of Week and Time Slots).
  */
 
 export const WEEK_DAYS = [
@@ -14,5 +13,5 @@ export const WEEK_DAYS = [
   "Niedziela",
 ];
 
-// Generates hours from 8 to 20
+// Generates an array of hours from 8 (8:00) to 20 (20:00)
 export const TIME_SLOTS = Array.from({ length: 13 }, (_, i) => 8 + i);

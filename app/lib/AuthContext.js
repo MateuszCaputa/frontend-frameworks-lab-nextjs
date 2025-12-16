@@ -10,9 +10,9 @@ const AuthContext = createContext({
 });
 
 /**
- * (Lab 7, Task 5)
- * Authentication Context Provider.
- * Monitors Firebase auth state changes and provides user data to the app.
+ * Authentication Provider Component.
+ * Manages the global authentication state using Firebase Auth observer.
+ * Provides the current user object and loading state to the application tree.
  *
  * @param {object} props - Component props.
  * @param {React.ReactNode} props.children - Child components.
@@ -23,11 +23,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
+      setUser(user || null);
       setLoading(false);
     });
 
@@ -42,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 };
 
 /**
- * Custom hook to access authentication state.
- * @returns {object} { user, loading }
+ * Custom hook to access authentication context data.
+ * @returns {{ user: object|null, loading: boolean }} The auth context value.
  */
 export const useAuth = () => useContext(AuthContext);

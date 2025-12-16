@@ -5,9 +5,9 @@ import { FaSignInAlt, FaUserCircle } from "react-icons/fa";
 import { useAuth } from "@/app/lib/AuthContext";
 
 /**
- * Client Component for Topbar Navigation.
- * Handles user authentication state to toggle between Login/Register buttons and User Info.
- * Displays user avatar if available.
+ * Topbar Navigation Component.
+ * Renders the top header bar with responsive controls.
+ * Displays user avatar/info if logged in, or Login/Register buttons otherwise.
  */
 export default function Topbar() {
   const { user } = useAuth();

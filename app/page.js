@@ -4,9 +4,8 @@ import Link from "next/link";
 import { useAuth } from "@/app/lib/AuthContext";
 
 /**
- * (Lab 7)
- * Home Page.
- * Landing page with conditional rendering based on auth state.
+ * Landing Page Component.
+ * Displays project information and conditional action buttons based on user state.
  */
 export default function Home() {
   const { user } = useAuth();
@@ -18,7 +17,7 @@ export default function Home() {
       </h1>
 
       <p className="text-xl text-gray-600 max-w-2xl mb-10">
-        Projekt zaliczeniowy realizujący zagadnienia z laboratoriów 7-11.
+        Projekt zaliczeniowy realizujący zagadnienia z laboratoriów 6-11.
         Aplikacja wykorzystuje <strong>Next.js</strong>,{" "}
         <strong>Firebase Authentication</strong> oraz{" "}
         <strong>Tailwind CSS</strong>.

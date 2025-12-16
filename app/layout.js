@@ -16,13 +16,13 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Frontend Laboratory App",
-  description: "Projekt zaliczeniowy na Lab 7-11",
+  description: "Projekt zaliczeniowy na Lab 6-11",
 };
 
 /**
- * (Lab 7, Task 2 & 5)
- * Root Layout component.
- * Integrates Sidebar and Topbar components within AuthProvider.
+ * Root Layout Component.
+ * Defines the global application structure including fonts, AuthProvider,
+ * Sidebar, and Topbar components.
  */
 export default function RootLayout({ children }) {
   return (
@@ -33,10 +33,8 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <div className="flex min-h-screen flex-row">
             <Sidebar />
-
             <div className="flex-1 flex flex-col relative">
               <Topbar />
-
               <main className="flex-1 p-6 lg:p-10 overflow-auto">
                 {children}
               </main>
